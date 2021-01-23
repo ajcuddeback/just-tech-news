@@ -4,7 +4,7 @@ const { User } = require('../../models');
 router.get('/', (req, res) => {
     // Access our User model and run .findAll() method
     User.findAll({
-        attributes: { exclude: ['password'] }
+        // attributes: { exclude: ['password'] }
     })
         .then(dbUserData => res.json(dbUserData))
         .catch(err => {
@@ -51,6 +51,7 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
     User.update(req.body, {
+        individualHooks: true,
         where: {
             id: req.params.id
         }
