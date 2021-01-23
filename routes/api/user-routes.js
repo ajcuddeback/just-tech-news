@@ -4,7 +4,7 @@ const { User } = require('../../models');
 router.get('/', (req, res) => {
     // Access our User model and run .findAll() method
     User.findAll({
-        // attributes: { exclude: ['password'] }
+        attributes: { exclude: ['password'] }
     })
         .then(dbUserData => res.json(dbUserData))
         .catch(err => {
@@ -48,6 +48,24 @@ router.post('/', (req, res) => {
             res.status(500).json(err);
         });
 });
+
+router.post('/login', (req, res) => {
+    // expects {email: 'example@example.com', password: 'password'}
+    User.findOne({
+        where: {
+            email: req.body.email
+        }
+    }).then(dbUserData => {
+        if (!dbUserData) {
+            res.status(400).json({ message: 'No user with that email adress!' });
+            return;
+        }
+
+        res.json({ user: dbUserData })
+
+        // Verify user
+    })
+})
 
 router.put('/:id', (req, res) => {
     User.update(req.body, {
